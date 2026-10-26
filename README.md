@@ -3,7 +3,7 @@
 > **把你的煩惱投進信箱，明天太陽依舊升起。**  
 > 一個利用生成式 AI 打造的互動式心靈樹洞與處方箋生成器，讓每位帶著疲憊與迷惘的人，收穫專屬的手寫回信與溫暖拍立得。
 
-[![GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-orange?style=flat-square&logo=github)](https://username.github.io/worry-grocer/)
+[![GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-orange?style=flat-square&logo=github)](https://411411324.github.io/worry-grocer/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![AI Engine](https://img.shields.io/badge/AI-Google%20Gemini%20Flash-blue?style=flat-square&logo=google)](https://ai.google.dev/)
 
@@ -57,7 +57,7 @@
 
 1. **Clone 本專案**：
    ```bash
-   git clone https://github.com/your-username/worry-grocer.git
+   git clone https://github.com/411411324/worry-grocer.git
    cd worry-grocer
    ```
 2. **開啟體驗**：
@@ -72,7 +72,7 @@
 2. 進入該 Repo 的 **Settings** ➔ **Pages**。
 3. 在 **Build and deployment** 下方的 **Branch** 選擇 `main`（或 `master`），資料夾選擇 `/ (root)`，點擊 **Save**。
 4. 等待 1~2 分鐘後，即可獲得線上公開分享網址：  
-   `https://<你的 GitHub 帳號>.github.io/worry-grocer/`
+   `https://411411324.github.io/worry-grocer/`
 
 ---
 

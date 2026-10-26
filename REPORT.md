@@ -1,7 +1,7 @@
 # 期中專案報告：解憂雜貨店 (Worry Grocer)
 
-> **專案網址（GitHub Repo）：** `https://github.com/你的帳號名稱/worry-grocer` *(請將此連結貼在線上繳交文字第一行)*  
-> **線上體驗網址（GitHub Pages）：** `https://你的帳號名稱.github.io/worry-grocer/`  
+> **專案網址（GitHub Repo）：** `https://github.com/411411324/worry-grocer` *(請將此連結貼在線上繳交文字第一行)*  
+> **線上體驗網址（GitHub Pages）：** `https://411411324.github.io/worry-grocer/`  
 > *(注意：本報告遵守規定，無出現個人姓名與學號)*
 
 ---
