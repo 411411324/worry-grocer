@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnWriteAgain = document.getElementById('btnWriteAgain');
   const copyBtnText = document.getElementById('copyBtnText');
 
+  // 語音朗讀元素
+  const btnReadAloud = document.getElementById('btnReadAloud');
+  const readAloudBtnText = document.getElementById('readAloudBtnText');
+  const btnHeaderAudio = document.getElementById('btnHeaderAudio');
+  const headerAudioText = document.getElementById('headerAudioText');
+  let isSpeaking = false;
+
   const btnFillDemo1 = document.getElementById('btnFillDemo1');
   const btnFillDemo2 = document.getElementById('btnFillDemo2');
 
@@ -248,12 +255,102 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // 8.5 語音朗讀功能 (Web Speech API)
+  let availableVoices = [];
+  function updateVoices() {
+    if ('speechSynthesis' in window) {
+      availableVoices = window.speechSynthesis.getVoices();
+    }
+  }
+  updateVoices();
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = updateVoices;
+  }
+
+  function setSpeakingState(speaking) {
+    isSpeaking = speaking;
+    if (speaking) {
+      readAloudBtnText.textContent = '⏹️ 停止朗讀';
+      headerAudioText.textContent = '⏹️ 停止';
+      btnReadAloud.classList.add('bg-rose-50', 'text-rose-600', 'border-rose-300');
+      btnReadAloud.classList.remove('bg-amber-50', 'text-brand-accent');
+      btnHeaderAudio.classList.add('bg-rose-50', 'text-rose-600', 'border-rose-300');
+      btnHeaderAudio.classList.remove('bg-amber-50', 'text-brand-accent');
+    } else {
+      readAloudBtnText.textContent = '語音朗讀回信';
+      headerAudioText.textContent = '聽店長讀信';
+      btnReadAloud.classList.remove('bg-rose-50', 'text-rose-600', 'border-rose-300');
+      btnReadAloud.classList.add('bg-amber-50', 'text-brand-accent');
+      btnHeaderAudio.classList.remove('bg-rose-50', 'text-rose-600', 'border-rose-300');
+      btnHeaderAudio.classList.add('bg-amber-50', 'text-brand-accent');
+    }
+  }
+
+  function toggleSpeech() {
+    if (!('speechSynthesis' in window)) {
+      alert('抱歉，您的瀏覽器暫時不支援語音合成功能，建議使用 Chrome 或 Edge 開啟！');
+      return;
+    }
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setSpeakingState(false);
+      return;
+    }
+
+    // 組合朗讀文字
+    const readText = `${replySalutation.textContent}。\n${replyBody.textContent}。\n${replySignature.textContent}。\n今日心靈處方：${cardQuote.textContent}。\n微任務：${cardAction.textContent}`;
+    const utterance = new SpeechSynthesisUtterance(readText);
+    utterance.lang = 'zh-TW';
+
+    // 依據人格特性微調音調 (pitch) 與語速 (rate)
+    if (currentPersona === 'chai') {
+      utterance.rate = 1.12;  // 毒舌阿柴：語速稍快俐落
+      utterance.pitch = 1.0;
+    } else if (currentPersona === 'grandpa') {
+      utterance.rate = 0.82;  // 哲學爺爺：語速緩慢沉穩
+      utterance.pitch = 0.78; // 音調偏低厚重
+    } else {
+      utterance.rate = 0.90;  // 溫柔木木：語速溫和慢條斯理
+      utterance.pitch = 1.1;  // 音調溫柔柔和
+    }
+
+    // 挑選最佳中文聲音
+    const zhVoices = availableVoices.filter(v => v.lang.includes('zh') || v.lang.includes('cmn'));
+    if (zhVoices.length > 0) {
+      // 哲學爺爺偏好挑選 male 聲音，其餘偏好 female
+      if (currentPersona === 'grandpa') {
+        const maleVoice = zhVoices.find(v => v.name.toLowerCase().includes('male') || v.name.includes('Yunxi') || v.name.includes('Yunjian') || v.name.includes('Zhiwei'));
+        if (maleVoice) utterance.voice = maleVoice;
+        else utterance.voice = zhVoices[0];
+      } else {
+        const femaleVoice = zhVoices.find(v => v.name.toLowerCase().includes('female') || v.name.includes('HsiaoChen') || v.name.includes('HanHan') || v.name.includes('Xiaoxiao'));
+        if (femaleVoice) utterance.voice = femaleVoice;
+        else utterance.voice = zhVoices[0];
+      }
+    }
+
+    utterance.onstart = () => setSpeakingState(true);
+    utterance.onend = () => setSpeakingState(false);
+    utterance.onerror = () => setSpeakingState(false);
+
+    window.speechSynthesis.cancel(); // 清空先前發音隊列
+    window.speechSynthesis.speak(utterance);
+  }
+
+  if (btnReadAloud) btnReadAloud.addEventListener('click', toggleSpeech);
+  if (btnHeaderAudio) btnHeaderAudio.addEventListener('click', toggleSpeech);
+
   // 9. 再寫一封信
   btnWriteAgain.addEventListener('click', () => {
     resetToHome();
   });
 
   window.resetToHome = function() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setSpeakingState(false);
+    }
     sectionReply.classList.add('hidden');
     sectionSending.classList.add('hidden');
     sectionWrite.classList.remove('hidden');
