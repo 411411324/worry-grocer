@@ -32,12 +32,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnWriteAgain = document.getElementById('btnWriteAgain');
   const copyBtnText = document.getElementById('copyBtnText');
 
-  // 語音朗讀元素
+  // 語音朗讀與聲音設定元素
   const btnReadAloud = document.getElementById('btnReadAloud');
   const readAloudBtnText = document.getElementById('readAloudBtnText');
   const btnHeaderAudio = document.getElementById('btnHeaderAudio');
   const headerAudioText = document.getElementById('headerAudioText');
+  const btnVoiceSettings = document.getElementById('btnVoiceSettings');
+  const modalVoice = document.getElementById('modalVoice');
+  const btnCloseVoice = document.getElementById('btnCloseVoice');
+  const btnConfirmVoice = document.getElementById('btnConfirmVoice');
+  const voiceSelect = document.getElementById('voiceSelect');
+  const btnPreviewVoice = document.getElementById('btnPreviewVoice');
+  const chkAmbientBgm = document.getElementById('chkAmbientBgm');
+  const sliderSpeed = document.getElementById('sliderSpeed');
+  const sliderPitch = document.getElementById('sliderPitch');
+  const lblSpeed = document.getElementById('lblSpeed');
+  const lblPitch = document.getElementById('lblPitch');
   let isSpeaking = false;
+  let userSelectedVoiceURI = localStorage.getItem('wg_voice_uri') || '';
 
   const btnFillDemo1 = document.getElementById('btnFillDemo1');
   const btnFillDemo2 = document.getElementById('btnFillDemo2');
@@ -255,16 +267,188 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 8.5 語音朗讀功能 (Web Speech API)
+  // 8.5 語音朗讀與治癒背景音樂功能 (Web Audio API & Web Speech API)
+  class AmbientSoundtrack {
+    constructor() {
+      this.ctx = null;
+      this.isPlaying = false;
+      this.masterGain = null;
+      this.timer = null;
+      // 暖心大七和弦與五聲音階頻率 (Cmaj7, Am7, Fmaj7, G)
+      this.chords = [
+        [130.81, 196.00, 246.94, 329.63], // Cmaj7
+        [110.00, 164.81, 220.00, 261.63], // Am7
+        [87.31, 130.81, 174.61, 220.00],  // Fmaj7
+        [98.00, 146.83, 196.00, 246.94]   // G
+      ];
+      this.chordIdx = 0;
+    }
+    init() {
+      if (!this.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          this.ctx = new AudioCtx();
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+          this.masterGain.connect(this.ctx.destination);
+        }
+      }
+    }
+    start() {
+      this.init();
+      if (!this.ctx) return;
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      this.isPlaying = true;
+      this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+      this.masterGain.gain.exponentialRampToValueAtTime(0.12, this.ctx.currentTime + 1.8);
+      this.playNextChord();
+    }
+    playNextChord() {
+      if (!this.isPlaying || !this.ctx) return;
+      const now = this.ctx.currentTime;
+      const chord = this.chords[this.chordIdx % this.chords.length];
+      this.chordIdx++;
+
+      chord.forEach(freq => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(420, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(0.032, now + 1.2);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+
+        osc.start(now);
+        osc.stop(now + 5.0);
+      });
+
+      this.timer = setTimeout(() => this.playNextChord(), 4500);
+    }
+    stop() {
+      this.isPlaying = false;
+      if (this.timer) clearTimeout(this.timer);
+      if (this.masterGain && this.ctx) {
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 1.2);
+      }
+    }
+  }
+
+  const ambientSoundtrack = new AmbientSoundtrack();
+
   let availableVoices = [];
   function updateVoices() {
     if ('speechSynthesis' in window) {
       availableVoices = window.speechSynthesis.getVoices();
+      populateVoiceSelect();
     }
   }
+
+  function populateVoiceSelect() {
+    if (!voiceSelect || availableVoices.length === 0) return;
+    voiceSelect.innerHTML = '';
+
+    // 優先挑選中文聲音，並標記特色
+    const zhVoices = availableVoices.filter(v => 
+      v.lang.toLowerCase().includes('zh') || 
+      v.lang.toLowerCase().includes('cmn') ||
+      v.lang.toLowerCase().includes('taiwan')
+    );
+
+    const otherVoices = availableVoices.filter(v => !zhVoices.includes(v));
+
+    function formatVoiceName(v) {
+      const name = v.name;
+      if (name.includes('HsiaoChen') || name.includes('曉臻')) return `🌸 曉臻 (極致溫柔自然女聲 · 強烈推薦)`;
+      if (name.includes('Xiaoxiao') || name.includes('曉曉')) return `🌸 曉曉 (溫暖親切女聲 · 推薦)`;
+      if (name.includes('Yunjian') || name.includes('雲健')) return `📜 雲健 (沉穩說書長者男聲 · 推薦)`;
+      if (name.includes('Yunxi') || name.includes('雲希')) return `☕ 雲希 (陽光少年男聲)`;
+      if (name.includes('Yating') || name.includes('雅婷')) return `✨ 雅婷 (台灣自然女聲)`;
+      if (name.includes('Zhiwei') || name.includes('志偉')) return `☕ 志偉 (台灣沉穩男聲)`;
+      if (name.includes('Google') && name.includes('國語')) return `✨ Google 國語 (自然流暢)`;
+      if (name.includes('Hanhan') || name.includes('涵涵')) return `涵涵 (Windows 預設桌上型語音)`;
+      return `${v.name} (${v.lang})`;
+    }
+
+    // 加入中文選項
+    zhVoices.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.voiceURI;
+      opt.textContent = formatVoiceName(v);
+      if (userSelectedVoiceURI && v.voiceURI === userSelectedVoiceURI) {
+        opt.selected = true;
+      }
+      voiceSelect.appendChild(opt);
+    });
+
+    // 若有自選且未預選，預設選取最佳推薦聲音
+    if (!voiceSelect.value && zhVoices.length > 0) {
+      const best = zhVoices.find(v => v.name.includes('HsiaoChen') || v.name.includes('Xiaoxiao') || v.name.includes('Natural')) || zhVoices[0];
+      if (best) voiceSelect.value = best.voiceURI;
+    }
+  }
+
   updateVoices();
   if ('speechSynthesis' in window) {
     window.speechSynthesis.onvoiceschanged = updateVoices;
+  }
+
+  // 語音設定 Modal 事件監聽
+  if (btnVoiceSettings) {
+    btnVoiceSettings.addEventListener('click', () => {
+      updateVoices();
+      modalVoice.classList.remove('hidden');
+    });
+  }
+  if (btnCloseVoice) {
+    btnCloseVoice.addEventListener('click', () => modalVoice.classList.add('hidden'));
+  }
+  if (btnConfirmVoice) {
+    btnConfirmVoice.addEventListener('click', () => {
+      userSelectedVoiceURI = voiceSelect.value;
+      localStorage.setItem('wg_voice_uri', userSelectedVoiceURI);
+      modalVoice.classList.add('hidden');
+    });
+  }
+
+  // 試聽按鈕
+  if (btnPreviewVoice) {
+    btnPreviewVoice.addEventListener('click', () => {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const testUtterance = new SpeechSynthesisUtterance('你好呀，這裡是解憂雜貨店。累了就歇會兒，今晚把心事交給我吧。');
+      testUtterance.lang = 'zh-TW';
+      testUtterance.rate = parseFloat(sliderSpeed.value) || 0.82;
+      testUtterance.pitch = parseFloat(sliderPitch.value) || 0.95;
+
+      const chosen = availableVoices.find(v => v.voiceURI === voiceSelect.value);
+      if (chosen) testUtterance.voice = chosen;
+
+      window.speechSynthesis.speak(testUtterance);
+    });
+  }
+
+  // 滾動條即時數值反饋
+  if (sliderSpeed && lblSpeed) {
+    sliderSpeed.addEventListener('input', () => {
+      lblSpeed.textContent = `${sliderSpeed.value}x (${sliderSpeed.value < 0.85 ? '慢條斯理' : '正常步調'})`;
+    });
+  }
+  if (sliderPitch && lblPitch) {
+    sliderPitch.addEventListener('input', () => {
+      lblPitch.textContent = `${sliderPitch.value}x (${sliderPitch.value < 0.9 ? '低沉溫厚' : '溫潤舒緩'})`;
+    });
   }
 
   function setSpeakingState(speaking) {
@@ -294,18 +478,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (isSpeaking) {
       window.speechSynthesis.cancel();
+      ambientSoundtrack.stop();
       setSpeakingState(false);
       return;
     }
 
-    // 處理文字，加入自然「呼吸停頓感」使聲音更溫柔
+    // 處理文字，加入自然「呼吸停頓感」
     function makeGentleText(raw) {
       return raw
-        .replace(/[!！]/g, '。')            // 緩和驚嘆號的衝擊力
-        .replace(/：/g, '…… ')             // 冒號後加入呼吸停頓
-        .replace(/，/g, '， ')              // 逗號增加微幅留白
-        .replace(/。/g, '。…… ')           // 句末增加深呼吸的安撫感
-        .replace(/\n+/g, ' ……\n');         // 段落切換長停頓
+        .replace(/[!！]/g, '。')
+        .replace(/：/g, '…… ')
+        .replace(/，/g, '， ')
+        .replace(/。/g, '。…… ')
+        .replace(/\n+/g, ' ……\n');
     }
 
     const salutation = makeGentleText(replySalutation.textContent);
@@ -318,53 +503,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const utterance = new SpeechSynthesisUtterance(readText);
     utterance.lang = 'zh-TW';
 
-    // 依據人格特性深度微調：
-    // 溫柔木木：放慢語速 (0.82)、略降音調 (0.95)，消除刺耳高頻，營造深夜耳邊輕聲撫慰的沉浸感
+    // 取得自選或滑桿數值
+    const customRate = sliderSpeed ? parseFloat(sliderSpeed.value) : 0.82;
+    const customPitch = sliderPitch ? parseFloat(sliderPitch.value) : 0.95;
+
     if (currentPersona === 'chai') {
-      utterance.rate = 1.08;   // 毒舌阿柴：語速明快俐落
-      utterance.pitch = 1.00;
-      utterance.volume = 1.0;
+      utterance.rate = customRate * 1.25;
+      utterance.pitch = customPitch * 1.05;
     } else if (currentPersona === 'grandpa') {
-      utterance.rate = 0.78;   // 哲學爺爺：緩慢長者步調
-      utterance.pitch = 0.72;  // 低沉安穩
-      utterance.volume = 0.95;
+      utterance.rate = customRate * 0.92;
+      utterance.pitch = customPitch * 0.80;
     } else {
-      utterance.rate = 0.82;   // 溫柔木木：慢速療癒節奏
-      utterance.pitch = 0.95;  // 溫潤、無機械刺耳感
-      utterance.volume = 0.95;
+      utterance.rate = customRate;
+      utterance.pitch = customPitch;
     }
 
-    // 優先挑選自然溫柔聲音 (Edge / Chrome Natural & Neural Voices)
-    const zhVoices = availableVoices.filter(v => 
-      v.lang.toLowerCase().includes('zh') || 
-      v.lang.toLowerCase().includes('cmn') ||
-      v.lang.toLowerCase().includes('taiwan')
-    );
+    // 優先套用使用者指定或最佳聲音
+    let chosenVoice = null;
+    if (userSelectedVoiceURI) {
+      chosenVoice = availableVoices.find(v => v.voiceURI === userSelectedVoiceURI);
+    }
 
-    if (zhVoices.length > 0) {
-      if (currentPersona === 'grandpa') {
-        // 哲學爺爺優先挑選男性沉穩聲音 (如 Yunjian, Yunxi, Zhiwei, Male)
-        const maleVoice = zhVoices.find(v => {
-          const n = v.name.toLowerCase();
-          return n.includes('yunjian') || n.includes('yunxi') || n.includes('zhiwei') || n.includes('male') || n.includes('daniel');
-        });
-        utterance.voice = maleVoice || zhVoices[0];
-      } else {
-        // 溫柔木木優先挑選高音質溫柔女聲 (HsiaoChen 是最著名的台灣溫柔女聲，其次是 Xiaoxiao、Google 國語)
-        const gentleVoice = zhVoices.find(v => {
-          const n = v.name.toLowerCase();
-          return n.includes('hsiaochen') || n.includes('xiaoxiao') || n.includes('natural') || n.includes('neural') || n.includes('hanhan');
-        }) || zhVoices.find(v => v.name.includes('Google') || v.lang.includes('TW'));
-        
-        utterance.voice = gentleVoice || zhVoices[0];
+    if (!chosenVoice) {
+      const zhVoices = availableVoices.filter(v => 
+        v.lang.toLowerCase().includes('zh') || 
+        v.lang.toLowerCase().includes('cmn') ||
+        v.lang.toLowerCase().includes('taiwan')
+      );
+      if (zhVoices.length > 0) {
+        if (currentPersona === 'grandpa') {
+          chosenVoice = zhVoices.find(v => {
+            const n = v.name.toLowerCase();
+            return n.includes('yunjian') || n.includes('yunxi') || n.includes('zhiwei') || n.includes('male');
+          }) || zhVoices[0];
+        } else {
+          chosenVoice = zhVoices.find(v => {
+            const n = v.name.toLowerCase();
+            return n.includes('hsiaochen') || n.includes('xiaoxiao') || n.includes('natural') || n.includes('neural');
+          }) || zhVoices.find(v => v.name.includes('Google') || v.lang.includes('TW')) || zhVoices[0];
+        }
       }
     }
 
-    utterance.onstart = () => setSpeakingState(true);
-    utterance.onend = () => setSpeakingState(false);
-    utterance.onerror = () => setSpeakingState(false);
+    if (chosenVoice) utterance.voice = chosenVoice;
 
-    window.speechSynthesis.cancel(); // 清空先前發音隊列
+    utterance.onstart = () => {
+      setSpeakingState(true);
+      if (chkAmbientBgm && chkAmbientBgm.checked) {
+        ambientSoundtrack.start();
+      }
+    };
+    utterance.onend = () => {
+      setSpeakingState(false);
+      ambientSoundtrack.stop();
+    };
+    utterance.onerror = () => {
+      setSpeakingState(false);
+      ambientSoundtrack.stop();
+    };
+
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   }
 
@@ -381,6 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.speechSynthesis.cancel();
       setSpeakingState(false);
     }
+    ambientSoundtrack.stop();
     sectionReply.classList.add('hidden');
     sectionSending.classList.add('hidden');
     sectionWrite.classList.remove('hidden');
