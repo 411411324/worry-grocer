@@ -1,0 +1,131 @@
+/* 解憂雜貨店 Worry Grocer - 專屬樣式 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+
+:root {
+  --bg-creamy: #FAF7F2;
+  --paper-color: #FFFDF9;
+  --ink-primary: #2C2623;
+  --ink-secondary: #6B5E55;
+  --warm-accent: #C85A32;
+  --warm-amber: #D97736;
+  --vintage-border: #E8DFD5;
+  --seal-red: #A83232;
+}
+
+body {
+  font-family: 'Zen Maru Gothic', 'Noto Serif TC', serif;
+  background-color: var(--bg-creamy);
+  color: var(--ink-primary);
+  background-image: 
+    radial-gradient(#e5ddd2 0.75px, transparent 0.75px),
+    radial-gradient(#e5ddd2 0.75px, var(--bg-creamy) 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+.font-serif-tc {
+  font-family: 'Noto Serif TC', serif;
+}
+
+/* 復古信紙橫線 */
+.lined-paper {
+  background-color: var(--paper-color);
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    #F0E7DD 31px,
+    #F0E7DD 32px
+  );
+  line-height: 32px;
+}
+
+/* 郵戳樣式 */
+.vintage-stamp {
+  border: 2px dashed var(--seal-red);
+  color: var(--seal-red);
+  transform: rotate(-10deg);
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  user-select: none;
+  opacity: 0.85;
+}
+
+/* 拍立得卡片陰影與質感 */
+.polaroid-card {
+  background: #FFFFFF;
+  box-shadow: 0 20px 35px -10px rgba(74, 58, 45, 0.18), 0 0 1px 1px rgba(0,0,0,0.05);
+  border: 1px solid #EFEAE3;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.polaroid-card:hover {
+  transform: translateY(-2px) rotate(0.5deg);
+}
+
+/* 投遞動畫 */
+@keyframes mailFly {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(-30px) scale(0.9) rotate(-3deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-160px) scale(0.3) rotate(8deg);
+    opacity: 0;
+  }
+}
+
+.animate-mail-fly {
+  animation: mailFly 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 信封拆封漸變 */
+@keyframes letterUnfold {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-letter-unfold {
+  animation: letterUnfold 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 柔和呼吸燈 */
+@keyframes gentlePulse {
+  0%, 100% { opacity: 0.95; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.03); }
+}
+
+.animate-gentle-pulse {
+  animation: gentlePulse 2.5s infinite ease-in-out;
+}
+
+/* 柔和滾動條 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F4EFEA;
+}
+::-webkit-scrollbar-thumb {
+  background: #D5C8BB;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #BFAF9F;
+}

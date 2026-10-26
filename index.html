@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>解憂雜貨店 Worry Grocer | 你的心事樹洞與心靈處方箋</title>
+  <meta name="description" content="用 AI 打造的解憂雜貨店，投遞你的心事與煩惱，收穫專屬的手寫回信與拍立得處方箋。">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cream: '#FAF7F2',
+              paper: '#FFFDF9',
+              ink: '#2C2623',
+              muted: '#7C6E65',
+              accent: '#C85A32',
+              amber: '#D97736',
+              border: '#E8DFD5',
+              seal: '#A83232'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Icons (Lucide) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- html2canvas for Polaroid export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-accent selection:text-white">
+
+  <!-- 頂部導航列 -->
+  <header class="border-b border-brand-border/60 bg-brand-cream/80 backdrop-blur-md sticky top-0 z-40 px-4 py-3 sm:px-8">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="resetToHome()">
+        <span class="text-2xl">🏮</span>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-brand-ink flex items-center space-x-2">
+            <span>解憂雜貨店</span>
+            <span class="text-xs font-normal px-2 py-0.5 rounded-full bg-brand-amber/10 text-brand-accent border border-brand-accent/20">Worry Grocer</span>
+          </h1>
+          <p class="text-xs text-brand-muted hidden sm:block">把你的煩惱投進信箱，明天太陽依舊升起</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button id="btnAbout" class="px-3 py-1.5 text-xs sm:text-sm font-medium text-brand-muted hover:text-brand-ink hover:bg-black/5 rounded-lg transition-colors flex items-center space-x-1">
+          <i data-lucide="info" class="w-4 h-4"></i>
+          <span>關於本站</span>
+        </button>
+        <button id="btnApiSettings" class="px-3 py-1.5 text-xs sm:text-sm font-medium bg-brand-border/50 hover:bg-brand-border text-brand-ink rounded-lg transition-colors flex items-center space-x-1 border border-brand-border">
+          <i data-lucide="key" class="w-4 h-4 text-brand-accent"></i>
+          <span id="apiStatusText">體驗模式 (免金鑰)</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-3xl mx-auto px-4 py-8 sm:py-12 flex-1 w-full">
+
+    <!-- 狀態 1：寫信投遞介面 -->
+    <section id="sectionWrite" class="space-y-8 animate-fade-in">
+      
+      <!-- 標題介紹 -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-accent/10 text-brand-accent text-xs font-medium">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span>AI 情感陪伴與樹洞共創</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold font-serif-tc text-brand-ink">今夜，你有什麼心事想投遞嗎？</h2>
+        <p class="text-sm text-brand-muted max-w-md mx-auto">
+          每一封信都會被認真閱讀。挑選一位你今天最想傾訴的店長，把心裡的重量放下吧。
+        </p>
+      </div>
+
+      <!-- 步驟 1：選擇店長人格 -->
+      <div class="space-y-3">
+        <label class="block text-sm font-bold text-brand-ink flex items-center space-x-1.5">
+          <span class="w-5 h-5 rounded-full bg-brand-accent text-white inline-flex items-center justify-center text-xs">1</span>
+          <span>選擇今天為你解憂的店長</span>
+        </label>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="personaSelector">
+          
+          <!-- 人格 1: 溫柔木木 -->
+          <div class="persona-card active p-4 rounded-xl border-2 border-brand-accent bg-brand-paper shadow-sm cursor-pointer transition-all hover:shadow-md relative" data-persona="mumu">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-3xl">🌿</span>
+              <div>
+                <h3 class="font-bold text-brand-ink text-sm sm:text-base">溫柔木木</h3>
+                <span class="text-xs text-brand-accent font-medium">治癒暖心系</span>
+              </div>
+            </div>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              「沒關係的，你已經很努力了。喝杯熱茶，我在這裡溫柔守候你的脆弱。」
+            </p>
+            <div class="selected-indicator absolute top-3 right-3 text-brand-accent">
+              <i data-lucide="check-circle-2" class="w-5 h-5 fill-brand-accent text-white"></i>
+            </div>
+          </div>
+
+          <!-- 人格 2: 毒舌阿柴 -->
+          <div class="persona-card p-4 rounded-xl border border-brand-border bg-brand-paper shadow-sm cursor-pointer transition-all hover:border-brand-accent/60 hover:shadow-md relative" data-persona="chai">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-3xl">☕</span>
+              <div>
+                <h3 class="font-bold text-brand-ink text-sm sm:text-base">毒舌阿柴</h3>
+                <span class="text-xs text-brand-amber font-medium">幽默吐槽系</span>
+              </div>
+            </div>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              「天不會塌下來，塌了也是高個頂著。別再半夜內耗了，快給我醒醒！」
+            </p>
+            <div class="selected-indicator absolute top-3 right-3 text-brand-accent hidden">
+              <i data-lucide="check-circle-2" class="w-5 h-5 fill-brand-accent text-white"></i>
+            </div>
+          </div>
+
+          <!-- 人格 3: 哲學爺爺 -->
+          <div class="persona-card p-4 rounded-xl border border-brand-border bg-brand-paper shadow-sm cursor-pointer transition-all hover:border-brand-accent/60 hover:shadow-md relative" data-persona="grandpa">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-3xl">📜</span>
+              <div>
+                <h3 class="font-bold text-brand-ink text-sm sm:text-base">哲學爺爺</h3>
+                <span class="text-xs text-stone-600 font-medium">生活洞察系</span>
+              </div>
+            </div>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              「葉落自逢秋，水流終歸海。眼前的困局，只是人生畫卷的一抹筆觸。」
+            </p>
+            <div class="selected-indicator absolute top-3 right-3 text-brand-accent hidden">
+              <i data-lucide="check-circle-2" class="w-5 h-5 fill-brand-accent text-white"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 步驟 2：心情標籤 -->
+      <div class="space-y-3">
+        <label class="block text-sm font-bold text-brand-ink flex items-center space-x-1.5">
+          <span class="w-5 h-5 rounded-full bg-brand-accent text-white inline-flex items-center justify-center text-xs">2</span>
+          <span>標記你此刻的心情頻率（可複選）</span>
+        </label>
+        <div class="flex flex-wrap gap-2" id="moodTags">
+          <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="焦慮內耗">
+            🌪️ 焦慮內耗
+          </button>
+          <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="期中/學業崩潰">
+            📚 期中期末崩潰
+          </button>
+          <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="迷惘不知去向">
+            🧭 迷惘不知方向
+          </button>
+          <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="人際心累">
+            👥 人際心累
+          </button>
+          <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="深夜失眠">
+            🌙 深夜失眠
+          </button>
+          <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="想被罵醒">
+            ⚡ 想被罵醒
+          </button>
+          <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="努力卻沒結果">
+            🌧️ 努力卻沒結果
+          </button>
+        </div>
+      </div>
+
+      <!-- 步驟 3：信件內容 -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="block text-sm font-bold text-brand-ink flex items-center space-x-1.5">
+            <span class="w-5 h-5 rounded-full bg-brand-accent text-white inline-flex items-center justify-center text-xs">3</span>
+            <span>親筆寫下你的心事</span>
+          </label>
+          
+          <!-- 快速範例 -->
+          <div class="flex items-center space-x-1 text-xs text-brand-muted">
+            <span>靈感範例：</span>
+            <button type="button" id="btnFillDemo1" class="text-brand-accent hover:underline">期中專題好焦慮</button>
+            <span>·</span>
+            <button type="button" id="btnFillDemo2" class="text-brand-accent hover:underline">覺得比不上別人</button>
+          </div>
+        </div>
+
+        <!-- 稱謂 -->
+        <div class="flex items-center space-x-2 bg-brand-paper p-3 rounded-lg border border-brand-border text-sm">
+          <span class="text-brand-muted whitespace-nowrap">你希望店長怎麼稱呼你？</span>
+          <input type="text" id="senderName" value="夜行的小狐狸" placeholder="例：熬夜的大學生、迷路的旅人" class="bg-transparent border-b border-brand-border focus:border-brand-accent outline-none px-2 py-0.5 text-brand-ink w-full font-medium">
+        </div>
+
+        <!-- 信紙文本框 -->
+        <div class="relative rounded-xl border border-brand-border overflow-hidden shadow-sm">
+          <textarea id="letterContent" rows="7" placeholder="親愛的店長：&#10;&#10;最近常常覺得事情好多、時間好少，不知道自己到底走在對的路上嗎？..." class="w-full lined-paper p-4 text-brand-ink text-sm sm:text-base outline-none resize-y"></textarea>
+          <div class="absolute bottom-3 right-4 text-xs text-brand-muted">
+            <span id="charCount">0</span> 字
+          </div>
+        </div>
+      </div>
+
+      <!-- 投遞按鈕 -->
+      <div class="pt-2 text-center">
+        <button id="btnSendLetter" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-brand-accent hover:bg-brand-accent/90 text-white font-bold text-base sm:text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center space-x-2 mx-auto">
+          <i data-lucide="send" class="w-5 h-5"></i>
+          <span>封信投遞到解憂信箱</span>
+        </button>
+        <p class="text-xs text-brand-muted mt-2">投遞後，店長將親自閱信並開立今日心靈處方箋</p>
+      </div>
+
+    </section>
+
+    <!-- 狀態 2：信件投遞與等待動效 -->
+    <section id="sectionSending" class="hidden text-center py-16 space-y-6">
+      <div class="w-24 h-24 mx-auto relative flex items-center justify-center">
+        <div class="absolute inset-0 bg-brand-amber/20 rounded-full animate-ping"></div>
+        <div class="relative text-6xl animate-bounce">📬</div>
+      </div>
+      <div class="space-y-2">
+        <h3 class="text-xl font-bold font-serif-tc text-brand-ink">信件正在穿過夜色送往雜貨店...</h3>
+        <p class="text-sm text-brand-muted" id="sendingQuote">店長正在點燃油燈、戴上眼鏡閱讀你的信箋</p>
+      </div>
+      <div class="w-48 h-1.5 bg-brand-border rounded-full mx-auto overflow-hidden">
+        <div class="h-full bg-brand-accent rounded-full animate-pulse w-3/4"></div>
+      </div>
+    </section>
+
+    <!-- 狀態 3：回信與處方小卡展示 -->
+    <section id="sectionReply" class="hidden space-y-8 animate-letter-unfold">
+      
+      <!-- 頂部提示 -->
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">💌</span>
+          <h2 class="text-lg font-bold font-serif-tc text-brand-ink">解憂雜貨店 來信回覆</h2>
+        </div>
+        <div class="text-xs text-brand-muted" id="replyDate">2026.10.26</div>
+      </div>
+
+      <!-- 手寫回信本體 (信紙) -->
+      <div class="bg-brand-paper border border-brand-border rounded-2xl p-6 sm:p-8 shadow-sm space-y-4 relative overflow-hidden">
+        <!-- 復古郵戳標籤 -->
+        <div class="vintage-stamp absolute top-4 right-4 sm:top-6 sm:right-6 px-3 py-1 text-xs">
+          Worry Grocer · 回信投遞
+        </div>
+
+        <div class="font-bold text-brand-ink text-base font-serif-tc" id="replySalutation">
+          親愛的 夜行的小狐狸：
+        </div>
+
+        <div id="replyBody" class="text-brand-ink text-sm sm:text-base leading-relaxed space-y-3 font-serif-tc whitespace-pre-line">
+          <!-- AI 或精選回信內容注入於此 -->
+        </div>
+
+        <div class="pt-4 flex justify-between items-end border-t border-brand-border/60 text-xs sm:text-sm text-brand-muted">
+          <div>
+            <span>心情診斷：</span>
+            <span id="replyMoodBadge" class="font-medium text-brand-accent">焦慮內耗</span>
+          </div>
+          <div class="text-right font-serif-tc font-bold text-brand-ink" id="replySignature">
+            —— 你的解憂店長 溫柔木木 筆
+          </div>
+        </div>
+      </div>
+
+      <!-- 今日心靈處方箋 (拍立得卡片 - 支援截圖下載) -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-brand-ink flex items-center space-x-1.5">
+            <i data-lucide="camera" class="w-4 h-4 text-brand-accent"></i>
+            <span>你的專屬心靈處方拍立得（可下載保存）</span>
+          </h3>
+          <span class="text-xs text-brand-muted">分享到社群或留給自己</span>
+        </div>
+
+        <!-- 拍立得本體 (html2canvas 擷取目標) -->
+        <div id="polaroidCaptureArea" class="max-w-md mx-auto p-6 sm:p-7 rounded-2xl polaroid-card space-y-5 bg-white text-brand-ink">
+          
+          <!-- 卡片頂部 -->
+          <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-base">🏮</span>
+              <span class="text-xs font-bold tracking-wider uppercase text-stone-500">Worry Grocer Rx</span>
+            </div>
+            <span class="text-xs font-mono text-stone-400" id="cardRxNumber">No. 2026-WG-889</span>
+          </div>
+
+          <!-- 金句特寫 -->
+          <div class="py-2 text-center space-y-2">
+            <span class="text-xs uppercase tracking-widest text-brand-accent font-bold">今日解憂金句</span>
+            <blockquote id="cardQuote" class="text-lg sm:text-xl font-bold font-serif-tc text-stone-800 leading-snug px-2">
+              「累了就先躺平一會兒，世界不會因為你休息一晚就停止運轉。」
+            </blockquote>
+          </div>
+
+          <!-- 處方任務清單 -->
+          <div class="bg-stone-50 rounded-xl p-4 border border-stone-100 space-y-2 text-xs sm:text-sm">
+            <div class="flex items-center space-x-2 font-bold text-stone-700">
+              <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i>
+              <span>今日微處方任務：</span>
+            </div>
+            <p id="cardAction" class="text-stone-600 pl-6 leading-relaxed">
+              去泡一杯熱飲，站在窗邊深呼吸三次，今天不責怪自己任何事。
+            </p>
+          </div>
+
+          <!-- 底部簽署與郵戳 -->
+          <div class="flex items-center justify-between pt-2 text-xs text-stone-400">
+            <div>
+              <span>給：</span>
+              <span id="cardReceiver" class="font-medium text-stone-700">夜行的小狐狸</span>
+            </div>
+            <div class="flex items-center space-x-1 text-brand-seal border border-brand-seal/40 px-2 py-0.5 rounded font-serif-tc text-[11px] font-bold">
+              <span>解憂特調</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 操作按鈕群 -->
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-4">
+        <button id="btnDownloadCard" class="px-5 py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent/90 text-white font-medium text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-2">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>下載拍立得處方箋 (PNG)</span>
+        </button>
+        <button id="btnCopyReply" class="px-5 py-2.5 rounded-xl bg-brand-paper hover:bg-white text-brand-ink border border-brand-border font-medium text-sm transition-all flex items-center space-x-2">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span id="copyBtnText">複製回信全文</span>
+        </button>
+        <button id="btnWriteAgain" class="px-5 py-2.5 rounded-xl bg-transparent hover:bg-black/5 text-brand-muted hover:text-brand-ink font-medium text-sm transition-all flex items-center space-x-1.5">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          <span>再寫一封心事</span>
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- 頁腳 -->
+  <footer class="border-t border-brand-border/60 py-6 px-4 text-center text-xs text-brand-muted space-y-1">
+    <p>🏮 解憂雜貨店 Worry Grocer · 用 AI 溫暖每一個孤單的深夜</p>
+    <p>靈感源自東野圭吾《解憂雜貨店》與非暴力溝通傾聽機制 · 開源點子分享</p>
+  </footer>
+
+  <!-- Modal 1: 關於本站與設計理念 -->
+  <div id="modalAbout" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-brand-paper border border-brand-border rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <h3 class="font-bold text-lg font-serif-tc text-brand-ink flex items-center space-x-2">
+          <span>🏮 關於「解憂雜貨店」專案</span>
+        </h3>
+        <button id="btnCloseAbout" class="text-brand-muted hover:text-brand-ink">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="text-sm text-brand-ink space-y-3 leading-relaxed">
+        <p><strong>🎯 專題核心點子：</strong></p>
+        <p class="text-brand-muted">
+          這是一個能自由分享給朋友、同學與大眾的心靈樹洞。現代人常在深夜感到迷惘與焦慮，卻不願打擾親友。「解憂雜貨店」透過 AI 模擬多種不同維度的傾聽者，提供安全、不被評判的情緒出口，並產生可隨手轉發的實體感拍立得卡片。
+        </p>
+        <p><strong>🤖 AI 協作特色：</strong></p>
+        <ul class="list-disc pl-5 text-brand-muted space-y-1">
+          <li><strong>多重人格 Prompt Engineering</strong>：溫柔撫慰、毒舌幽默、哲學透析。</li>
+          <li><strong>非暴力溝通 (NVC) 共情框架</strong>：傾聽 ➔ 肯定情緒 ➔ 換位思考 ➔ 給予微行動。</li>
+          <li><strong>雙模運行機制</strong>：免金鑰內建高品質回信，或串接 Gemini 1.5 Flash 即時生成。</li>
+        </ul>
+      </div>
+      <div class="pt-2 text-right">
+        <button id="btnConfirmAbout" class="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm font-medium hover:bg-brand-accent/90">我瞭解了</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: API 設定 -->
+  <div id="modalApi" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-brand-paper border border-brand-border rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-fade-in">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <h3 class="font-bold text-base font-serif-tc text-brand-ink flex items-center space-x-2">
+          <i data-lucide="settings" class="w-4 h-4 text-brand-accent"></i>
+          <span>AI 運作模式設定</span>
+        </h3>
+        <button id="btnCloseApi" class="text-brand-muted hover:text-brand-ink">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <div class="space-y-4 text-sm">
+        <div class="space-y-2">
+          <label class="block font-medium text-brand-ink">選擇運行模式：</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="modeDemoBtn" class="p-3 rounded-lg border-2 border-brand-accent bg-brand-accent/5 font-medium text-brand-accent text-center text-xs">
+              ✨ 體驗模式<br><span class="text-[10px] text-brand-muted">免金鑰 · 穩定展示</span>
+            </button>
+            <button type="button" id="modeLiveBtn" class="p-3 rounded-lg border border-brand-border hover:border-brand-accent/50 font-medium text-brand-ink text-center text-xs">
+              ⚡ Gemini API 模式<br><span class="text-[10px] text-brand-muted">即時 AI 生成</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="apiKeyInputWrapper" class="space-y-2 hidden">
+          <label class="block text-xs font-medium text-brand-muted">Google Gemini API Key：</label>
+          <input type="password" id="geminiApiKey" placeholder="AIzaSy..." class="w-full p-2.5 bg-white border border-brand-border rounded-lg text-xs font-mono outline-none focus:border-brand-accent">
+          <p class="text-[11px] text-brand-muted">
+            金鑰僅保存在你的本機瀏覽器 LocalStorage，絕不上傳後端伺服器。若無金鑰，請使用「體驗模式」。
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end space-x-2">
+        <button id="btnSaveApi" class="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm font-medium hover:bg-brand-accent/90">儲存設定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
