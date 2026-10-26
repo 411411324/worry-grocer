@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>解憂雜貨店 Worry Grocer - 期中專案簡報</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cream: '#FAF7F2',
+              paper: '#FFFDF9',
+              ink: '#2C2623',
+              muted: '#7C6E65',
+              accent: '#C85A32',
+              amber: '#D97736',
+              border: '#E8DFD5',
+              seal: '#A83232'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Zen Maru Gothic', 'Noto Serif TC', serif;
+      background-color: #1A1615;
+      color: #2C2623;
+      user-select: none;
+    }
+    .font-serif-tc {
+      font-family: 'Noto Serif TC', serif;
+    }
+    .slide-aspect {
+      aspect-ratio: 16 / 9;
+    }
+    .vintage-stamp {
+      border: 2px dashed #A83232;
+      color: #A83232;
+      transform: rotate(-8deg);
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      opacity: 0.85;
+    }
+    /* 列印設定：按 Ctrl+P 直接輸出所有投影片為 PDF */
+    @media print {
+      body {
+        background-color: transparent !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .slide-container {
+        display: block !important;
+        page-break-after: always;
+        box-shadow: none !important;
+        border: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+      }
+      .slide-page {
+        display: flex !important;
+        opacity: 1 !important;
+        transform: none !important;
+        position: relative !important;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-6 overflow-hidden">
+
+  <!-- 簡報舞台主體 (16:9) -->
+  <div class="relative w-full max-w-5xl slide-aspect bg-[#FAF7F2] rounded-2xl shadow-2xl overflow-hidden border border-brand-border flex flex-col justify-between slide-container">
+    
+    <!-- 頂部資訊列 -->
+    <header class="px-8 pt-6 flex items-center justify-between text-xs text-brand-muted border-b border-brand-border/40 pb-3 z-10">
+      <div class="flex items-center space-x-2">
+        <span class="text-base">🏮</span>
+        <span class="font-bold tracking-wider text-brand-ink">解憂雜貨店 Worry Grocer</span>
+        <span class="px-2 py-0.5 rounded bg-brand-amber/15 text-brand-accent font-medium">期中專題</span>
+      </div>
+      <div class="flex items-center space-x-3">
+        <span class="hidden sm:inline">11/03 成果分享</span>
+        <span id="slideIndicator" class="font-bold text-brand-accent px-2 py-0.5 rounded bg-white shadow-sm border border-brand-border">1 / 6</span>
+      </div>
+    </header>
+
+    <!-- 投影片容器 -->
+    <div id="slidesWrapper" class="flex-1 relative p-6 sm:p-12 flex flex-col justify-center">
+
+      <!-- Slide 1: 封面 -->
+      <section class="slide-page absolute inset-0 p-8 sm:p-14 flex flex-col justify-center items-center text-center space-y-6 transition-all duration-500 opacity-100 scale-100 z-10" data-slide="1">
+        <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-brand-accent/10 text-brand-accent text-sm font-bold">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span>用 AI 做出一件能分享給別人的點子</span>
+        </div>
+        <div class="space-y-3">
+          <h1 class="text-4xl sm:text-6xl font-extrabold font-serif-tc text-brand-ink tracking-tight">
+            🏮 解憂雜貨店
+          </h1>
+          <p class="text-xl sm:text-2xl font-serif-tc text-brand-accent font-medium">
+            Worry Grocer · 你的深夜心事樹洞與心靈處方箋
+          </p>
+        </div>
+        <p class="text-sm sm:text-base text-brand-muted max-w-xl mx-auto leading-relaxed">
+          「把你的煩惱投進信箱，明天太陽依舊升起。」<br>
+          結合非暴力溝通、三種溫度筆友與一鍵拍立得卡片生成的生成式 AI 陪伴體驗。
+        </p>
+        <div class="pt-2 flex items-center justify-center space-x-6 text-xs text-brand-muted">
+          <span class="flex items-center space-x-1.5"><i data-lucide="globe" class="w-4 h-4 text-brand-accent"></i><span>已發布於 GitHub Pages</span></span>
+          <span class="flex items-center space-x-1.5"><i data-lucide="code" class="w-4 h-4 text-brand-accent"></i><span>完全開源 · 免伺服器</span></span>
+        </div>
+      </section>
+
+      <!-- Slide 2: 痛點與為什麼做這個 -->
+      <section class="slide-page absolute inset-0 p-8 sm:p-14 flex flex-col justify-center space-y-6 transition-all duration-500 opacity-0 scale-95 pointer-events-none" data-slide="2">
+        <div class="space-y-2">
+          <span class="text-xs font-bold tracking-widest text-brand-accent uppercase">Problem & Insight</span>
+          <h2 class="text-2xl sm:text-4xl font-bold font-serif-tc text-brand-ink">我們都有想傾訴的心事，卻不知向誰開口</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-2">
+          <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm space-y-3">
+            <span class="text-3xl">🤐</span>
+            <h3 class="font-bold text-brand-ink text-base">「怕給朋友添麻煩」</h3>
+            <p class="text-xs text-brand-muted leading-relaxed">深夜焦慮或課業挫折，總覺得發在社群太負面、跟朋友抱怨又怕打擾別人，只能獨自悶在心裡。</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm space-y-3">
+            <span class="text-3xl">🤖</span>
+            <h3 class="font-bold text-brand-ink text-base">傳統 AI 過於冰冷說教</h3>
+            <p class="text-xs text-brand-muted leading-relaxed">常見的聊天機器人只會條列式給 SOP 建議，缺乏手寫信的溫度、儀式感與真實的情感共鳴。</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm space-y-3">
+            <span class="text-3xl">📤</span>
+            <h3 class="font-bold text-brand-ink text-base">缺乏可隨手分享的形式</h3>
+            <p class="text-xs text-brand-muted leading-relaxed">聊天紀錄隱私度高不易分享。我們需要一種去識別化、精緻如拍立得的美感產出，把暖意傳遞出去。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: 核心功能與體驗展示 -->
+      <section class="slide-page absolute inset-0 p-8 sm:p-14 flex flex-col justify-center space-y-6 transition-all duration-500 opacity-0 scale-95 pointer-events-none" data-slide="3">
+        <div class="space-y-2">
+          <span class="text-xs font-bold tracking-widest text-brand-accent uppercase">Core Experience</span>
+          <h2 class="text-2xl sm:text-4xl font-bold font-serif-tc text-brand-ink">從寫信到開立處方箋的儀式感</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+          <div class="space-y-4">
+            <div class="flex items-start space-x-3 bg-white p-3.5 rounded-xl border border-brand-border">
+              <span class="text-2xl">🌿</span>
+              <div>
+                <h4 class="font-bold text-sm text-brand-ink">三大筆友人格自由挑選</h4>
+                <p class="text-xs text-brand-muted">溫柔木木（撫慰包容）/ 毒舌阿柴（幽默吐槽打破內耗）/ 哲學爺爺（宏觀透析開悟）</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3 bg-white p-3.5 rounded-xl border border-brand-border">
+              <span class="text-2xl">📮</span>
+              <div>
+                <h4 class="font-bold text-sm text-brand-ink">沉浸式書信儀式動效</h4>
+                <p class="text-xs text-brand-muted">橫線信紙書寫 ➔ 蓋上專屬日期郵戳 ➔ 拆信時彩帶散落，重溫期待回信的浪漫</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3 bg-white p-3.5 rounded-xl border border-brand-border">
+              <span class="text-2xl">📸</span>
+              <div>
+                <h4 class="font-bold text-sm text-brand-ink">今日心靈處方箋拍立得</h4>
+                <p class="text-xs text-brand-muted">提煉直擊人心的金句 + 今天就能做的一件微行動任務，支援一鍵下載 PNG 圖片！</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-5 border border-brand-border shadow-md flex flex-col items-center justify-center text-center space-y-3 relative overflow-hidden">
+            <div class="vintage-stamp absolute top-3 right-3 px-2 py-0.5 text-[10px]">Worry Grocer Rx</div>
+            <span class="text-xs text-brand-accent font-bold tracking-widest">處方箋實體預覽</span>
+            <blockquote class="font-serif-tc text-base sm:text-lg font-bold text-stone-800 leading-snug px-3">
+              「累了就先躺平一會兒，世界不會因為你休息一晚就停止運轉。」
+            </blockquote>
+            <div class="bg-stone-50 p-2.5 rounded-lg border border-stone-200 text-xs text-stone-600 w-full text-left">
+              <strong>微任務：</strong>去泡杯熱牛奶，站在窗邊深呼吸三次，今天不責怪自己任何事。
+            </div>
+            <span class="text-[11px] text-brand-muted">支援客戶端 Canvas 即時生成並匯出為高畫質圖片</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: 怎麼跟 AI 一起做 -->
+      <section class="slide-page absolute inset-0 p-8 sm:p-14 flex flex-col justify-center space-y-6 transition-all duration-500 opacity-0 scale-95 pointer-events-none" data-slide="4">
+        <div class="space-y-2">
+          <span class="text-xs font-bold tracking-widest text-brand-accent uppercase">AI Co-Creation</span>
+          <h2 class="text-2xl sm:text-4xl font-bold font-serif-tc text-brand-ink">人機協作：如何調教出有溫度的 AI？</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+          <div class="bg-white p-5 rounded-2xl border border-brand-border space-y-3">
+            <div class="flex items-center space-x-2 text-brand-accent font-bold text-sm">
+              <i data-lucide="sliders" class="w-4 h-4"></i>
+              <span>1. Prompt Engineering 與情緒邊界</span>
+            </div>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              導入<strong>非暴力溝通 (NVC)</strong> 心理學框架：先確認情緒 ➔ 給予共情 ➔ 換位思考 ➔ 給出微行動。嚴格限制「不講大道理」，賦予三位店長鮮活的說話口吻。
+            </p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-brand-border space-y-3">
+            <div class="flex items-center space-x-2 text-brand-accent font-bold text-sm">
+              <i data-lucide="layers" class="w-4 h-4"></i>
+              <span>2. 結構化輸出 (JSON Mode)</span>
+            </div>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              要求 Gemini API 輸出結構化 JSON（<code>letter</code> 長信、<code>quote</code> 金句、<code>action</code> 微任務），讓前端能無縫分離並精準排版至拍立得卡片。
+            </p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-brand-border space-y-3">
+            <div class="flex items-center space-x-2 text-brand-accent font-bold text-sm">
+              <i data-lucide="image" class="w-4 h-4"></i>
+              <span>3. 客戶端渲染攻堅 (html2canvas)</span>
+            </div>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              與 AI 協同除錯，在不依賴後端伺服器的情況下，調校 Retina 2.5x 解析度與 DOM 盒模型，讓純前端直接產生媲美設計軟體的拍立得圖檔。
+            </p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-brand-border space-y-3">
+            <div class="flex items-center space-x-2 text-brand-accent font-bold text-sm">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>4. 雙模設計 (高可用離線備援)</span>
+            </div>
+            <p class="text-xs text-brand-muted leading-relaxed">
+              為確保課堂與網路斷線時 Demo 零出錯，設計了免金鑰的智慧離線備援庫，讓任何人點開網址都能 100% 順暢體驗！
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: 成果與下一步 -->
+      <section class="slide-page absolute inset-0 p-8 sm:p-14 flex flex-col justify-center space-y-6 transition-all duration-500 opacity-0 scale-95 pointer-events-none" data-slide="5">
+        <div class="space-y-2">
+          <span class="text-xs font-bold tracking-widest text-brand-accent uppercase">Roadmap & Impact</span>
+          <h2 class="text-2xl sm:text-4xl font-bold font-serif-tc text-brand-ink">一個真正能分享給身邊人的點子</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-2">
+          <div class="bg-white p-5 rounded-2xl border border-brand-border space-y-2">
+            <div class="w-8 h-8 rounded-full bg-brand-accent/10 text-brand-accent flex items-center justify-center font-bold text-xs">01</div>
+            <h3 class="font-bold text-brand-ink text-sm">漂流星空共鳴池</h3>
+            <p class="text-xs text-brand-muted leading-relaxed">經寄信者同意後匿名投遞到公開星空，訪客可點擊並給予無聲的「溫暖擁抱」。</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-brand-border space-y-2">
+            <div class="w-8 h-8 rounded-full bg-brand-amber/15 text-brand-amber flex items-center justify-center font-bold text-xs">02</div>
+            <h3 class="font-bold text-brand-ink text-sm">語音陪伴朗讀 (TTS)</h3>
+            <p class="text-xs text-brand-muted leading-relaxed">整合多模態語音合成，讓溫柔木木或哲學爺爺用溫暖聲線親口把回信讀給你聽。</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-brand-border space-y-2">
+            <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">03</div>
+            <h3 class="font-bold text-brand-ink text-sm">心理危機防護與引導</h3>
+            <p class="text-xs text-brand-muted leading-relaxed">導入高危感情緒偵測，第一時間提供校園輔導中心與衛福部 1925 安心專線資訊。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: 結語與現場體驗 -->
+      <section class="slide-page absolute inset-0 p-8 sm:p-14 flex flex-col justify-center items-center text-center space-y-6 transition-all duration-500 opacity-0 scale-95 pointer-events-none" data-slide="6">
+        <div class="space-y-3">
+          <span class="text-xs font-bold tracking-widest text-brand-accent uppercase">Try it now</span>
+          <h2 class="text-3xl sm:text-5xl font-bold font-serif-tc text-brand-ink">
+            把心事交給雜貨店，明天又是新的一天
+          </h2>
+          <p class="text-sm sm:text-base text-brand-muted max-w-md mx-auto">
+            歡迎老師與同學們點開網頁，投遞屬於你的第一封信！
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border-2 border-brand-accent/40 shadow-xl flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+          <div class="w-32 h-32 bg-stone-100 rounded-xl flex flex-col items-center justify-center border border-dashed border-stone-300 p-2 text-center">
+            <i data-lucide="qr-code" class="w-16 h-16 text-brand-accent mb-1"></i>
+            <span class="text-[10px] text-stone-500 font-mono">GitHub Pages</span>
+          </div>
+          <div class="text-left space-y-2">
+            <div class="text-xs font-bold text-brand-ink">線上體驗網址：</div>
+            <div class="text-xs sm:text-sm font-mono bg-brand-cream px-3 py-1.5 rounded-lg border border-brand-border text-brand-accent font-bold select-all">
+              https://411411324.github.io/worry-grocer/
+            </div>
+            <p class="text-[11px] text-brand-muted">
+              手機掃描或點擊即可直接體驗，免登入、免 API Key 即刻開箱。
+            </p>
+          </div>
+        </div>
+
+        <p class="text-xs text-brand-muted pt-2">
+          謝謝大家聆聽！期中週大家辛苦了，記得好好照顧自己 ❤️
+        </p>
+      </section>
+
+    </div>
+
+    <!-- 底部控制按鈕列 (報告時可隱藏或按鍵盤左右鍵) -->
+    <footer class="px-8 py-4 bg-white/70 border-t border-brand-border/60 flex items-center justify-between text-xs text-brand-muted no-print z-10">
+      <div class="flex items-center space-x-2">
+        <span class="hidden sm:inline">鍵盤切換：</span>
+        <kbd class="px-2 py-1 bg-stone-100 rounded border border-stone-300 font-mono text-[11px]">←</kbd>
+        <kbd class="px-2 py-1 bg-stone-100 rounded border border-stone-300 font-mono text-[11px]">→</kbd>
+        <span class="hidden sm:inline text-stone-400">| 全螢幕請按 F11</span>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="prevBtn" class="px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium transition-colors flex items-center space-x-1">
+          <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          <span>上一頁</span>
+        </button>
+        <button id="nextBtn" class="px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/90 text-white font-medium transition-colors flex items-center space-x-1 shadow-sm">
+          <span>下一頁</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- 外層列印與全螢幕提示 (按鈕浮動在右上方) -->
+  <div class="fixed top-4 right-4 flex items-center space-x-2 no-print z-50">
+    <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur shadow-md text-xs font-medium text-stone-700 hover:bg-white flex items-center space-x-1 border border-stone-200">
+      <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+      <span>另存 PDF / 列印</span>
+    </button>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let currentSlide = 1;
+    const totalSlides = 6;
+    const slides = document.querySelectorAll('.slide-page');
+    const indicator = document.getElementById('slideIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      slides.forEach((slide, i) => {
+        const slideNum = i + 1;
+        if (slideNum === currentSlide) {
+          slide.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+          slide.classList.add('opacity-100', 'scale-100', 'z-10');
+        } else {
+          slide.classList.remove('opacity-100', 'scale-100', 'z-10');
+          slide.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+        }
+      });
+
+      indicator.textContent = `${currentSlide} / ${totalSlides}`;
+      prevBtn.disabled = currentSlide === 1;
+      nextBtn.disabled = currentSlide === totalSlides;
+      prevBtn.style.opacity = currentSlide === 1 ? '0.4' : '1';
+      nextBtn.style.opacity = currentSlide === totalSlides ? '0.4' : '1';
+    }
+
+    prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+    nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+
+    // 鍵盤導航
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        showSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        showSlide(currentSlide - 1);
+      }
+    });
+
+    showSlide(1);
+  </script>
+</body>
+</html>
