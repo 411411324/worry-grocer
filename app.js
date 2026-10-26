@@ -298,35 +298,65 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 組合朗讀文字
-    const readText = `${replySalutation.textContent}。\n${replyBody.textContent}。\n${replySignature.textContent}。\n今日心靈處方：${cardQuote.textContent}。\n微任務：${cardAction.textContent}`;
+    // 處理文字，加入自然「呼吸停頓感」使聲音更溫柔
+    function makeGentleText(raw) {
+      return raw
+        .replace(/[!！]/g, '。')            // 緩和驚嘆號的衝擊力
+        .replace(/：/g, '…… ')             // 冒號後加入呼吸停頓
+        .replace(/，/g, '， ')              // 逗號增加微幅留白
+        .replace(/。/g, '。…… ')           // 句末增加深呼吸的安撫感
+        .replace(/\n+/g, ' ……\n');         // 段落切換長停頓
+    }
+
+    const salutation = makeGentleText(replySalutation.textContent);
+    const body = makeGentleText(replyBody.textContent);
+    const signature = makeGentleText(replySignature.textContent);
+    const quote = makeGentleText(`今日心靈處方：${cardQuote.textContent}`);
+    const action = makeGentleText(`今日微任務：${cardAction.textContent}`);
+
+    const readText = `${salutation}\n${body}\n${signature}\n${quote}\n${action}`;
     const utterance = new SpeechSynthesisUtterance(readText);
     utterance.lang = 'zh-TW';
 
-    // 依據人格特性微調音調 (pitch) 與語速 (rate)
+    // 依據人格特性深度微調：
+    // 溫柔木木：放慢語速 (0.82)、略降音調 (0.95)，消除刺耳高頻，營造深夜耳邊輕聲撫慰的沉浸感
     if (currentPersona === 'chai') {
-      utterance.rate = 1.12;  // 毒舌阿柴：語速稍快俐落
-      utterance.pitch = 1.0;
+      utterance.rate = 1.08;   // 毒舌阿柴：語速明快俐落
+      utterance.pitch = 1.00;
+      utterance.volume = 1.0;
     } else if (currentPersona === 'grandpa') {
-      utterance.rate = 0.82;  // 哲學爺爺：語速緩慢沉穩
-      utterance.pitch = 0.78; // 音調偏低厚重
+      utterance.rate = 0.78;   // 哲學爺爺：緩慢長者步調
+      utterance.pitch = 0.72;  // 低沉安穩
+      utterance.volume = 0.95;
     } else {
-      utterance.rate = 0.90;  // 溫柔木木：語速溫和慢條斯理
-      utterance.pitch = 1.1;  // 音調溫柔柔和
+      utterance.rate = 0.82;   // 溫柔木木：慢速療癒節奏
+      utterance.pitch = 0.95;  // 溫潤、無機械刺耳感
+      utterance.volume = 0.95;
     }
 
-    // 挑選最佳中文聲音
-    const zhVoices = availableVoices.filter(v => v.lang.includes('zh') || v.lang.includes('cmn'));
+    // 優先挑選自然溫柔聲音 (Edge / Chrome Natural & Neural Voices)
+    const zhVoices = availableVoices.filter(v => 
+      v.lang.toLowerCase().includes('zh') || 
+      v.lang.toLowerCase().includes('cmn') ||
+      v.lang.toLowerCase().includes('taiwan')
+    );
+
     if (zhVoices.length > 0) {
-      // 哲學爺爺偏好挑選 male 聲音，其餘偏好 female
       if (currentPersona === 'grandpa') {
-        const maleVoice = zhVoices.find(v => v.name.toLowerCase().includes('male') || v.name.includes('Yunxi') || v.name.includes('Yunjian') || v.name.includes('Zhiwei'));
-        if (maleVoice) utterance.voice = maleVoice;
-        else utterance.voice = zhVoices[0];
+        // 哲學爺爺優先挑選男性沉穩聲音 (如 Yunjian, Yunxi, Zhiwei, Male)
+        const maleVoice = zhVoices.find(v => {
+          const n = v.name.toLowerCase();
+          return n.includes('yunjian') || n.includes('yunxi') || n.includes('zhiwei') || n.includes('male') || n.includes('daniel');
+        });
+        utterance.voice = maleVoice || zhVoices[0];
       } else {
-        const femaleVoice = zhVoices.find(v => v.name.toLowerCase().includes('female') || v.name.includes('HsiaoChen') || v.name.includes('HanHan') || v.name.includes('Xiaoxiao'));
-        if (femaleVoice) utterance.voice = femaleVoice;
-        else utterance.voice = zhVoices[0];
+        // 溫柔木木優先挑選高音質溫柔女聲 (HsiaoChen 是最著名的台灣溫柔女聲，其次是 Xiaoxiao、Google 國語)
+        const gentleVoice = zhVoices.find(v => {
+          const n = v.name.toLowerCase();
+          return n.includes('hsiaochen') || n.includes('xiaoxiao') || n.includes('natural') || n.includes('neural') || n.includes('hanhan');
+        }) || zhVoices.find(v => v.name.includes('Google') || v.lang.includes('TW'));
+        
+        utterance.voice = gentleVoice || zhVoices[0];
       }
     }
 
