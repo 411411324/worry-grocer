@@ -50,22 +50,32 @@
         <span class="text-2xl">🏮</span>
         <div>
           <h1 class="text-lg sm:text-xl font-bold tracking-tight text-brand-ink flex items-center space-x-2">
-            <span>解憂雜貨店</span>
+            <span data-i18n="site_title">解憂雜貨店</span>
             <span class="text-xs font-normal px-2 py-0.5 rounded-full bg-brand-amber/10 text-brand-accent border border-brand-accent/20">Worry Grocer</span>
           </h1>
-          <p class="text-xs text-brand-muted hidden sm:block">把你的煩惱投進信箱，明天太陽依舊升起</p>
+          <p class="text-xs text-brand-muted hidden sm:block" data-i18n="site_sub">把你的煩惱投進信箱，明天太陽依舊升起</p>
         </div>
       </div>
 
       <div class="flex items-center space-x-2">
+        <button id="btnGalaxy" class="px-3 py-1.5 text-xs sm:text-sm font-medium text-amber-800 bg-amber-100/70 hover:bg-amber-100 border border-amber-300/60 rounded-lg transition-colors flex items-center space-x-1 shadow-sm">
+          <i data-lucide="sparkles" class="w-4 h-4 text-brand-accent"></i>
+          <span data-i18n="nav_galaxy">漂流星空</span>
+        </button>
         <button id="btnAbout" class="px-3 py-1.5 text-xs sm:text-sm font-medium text-brand-muted hover:text-brand-ink hover:bg-black/5 rounded-lg transition-colors flex items-center space-x-1">
           <i data-lucide="info" class="w-4 h-4"></i>
-          <span>關於本站</span>
+          <span data-i18n="nav_about">關於本站</span>
         </button>
         <button id="btnApiSettings" class="px-3 py-1.5 text-xs sm:text-sm font-medium bg-brand-border/50 hover:bg-brand-border text-brand-ink rounded-lg transition-colors flex items-center space-x-1 border border-brand-border">
           <i data-lucide="key" class="w-4 h-4 text-brand-accent"></i>
           <span id="apiStatusText">體驗模式 (免金鑰)</span>
         </button>
+        <!-- 語言切換 -->
+        <select id="langSelect" class="px-2 py-1.5 text-xs font-bold bg-brand-paper border border-brand-border rounded-lg text-brand-ink outline-none focus:border-brand-accent cursor-pointer">
+          <option value="zh">🇹🇼 繁中</option>
+          <option value="en">🇺🇸 EN</option>
+          <option value="ja">🇯🇵 日本語</option>
+        </select>
       </div>
     </div>
   </header>
@@ -80,10 +90,10 @@
       <div class="text-center space-y-2">
         <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-accent/10 text-brand-accent text-xs font-medium">
           <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-          <span>AI 情感陪伴與樹洞共創</span>
+          <span data-i18n="header_tag">AI 情感陪伴與樹洞共創</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-bold font-serif-tc text-brand-ink">今夜，你有什麼心事想投遞嗎？</h2>
-        <p class="text-sm text-brand-muted max-w-md mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold font-serif-tc text-brand-ink" data-i18n="main_title">今夜，你有什麼心事想投遞嗎？</h2>
+        <p class="text-sm text-brand-muted max-w-md mx-auto" data-i18n="main_desc">
           每一封信都會被認真閱讀。挑選一位你今天最想傾訴的店長，把心裡的重量放下吧。
         </p>
       </div>
@@ -92,7 +102,7 @@
       <div class="space-y-3">
         <label class="block text-sm font-bold text-brand-ink flex items-center space-x-1.5">
           <span class="w-5 h-5 rounded-full bg-brand-accent text-white inline-flex items-center justify-center text-xs">1</span>
-          <span>選擇今天為你解憂的店長</span>
+          <span data-i18n="step1_title">選擇今天為你解憂的店長</span>
         </label>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="personaSelector">
           
@@ -101,11 +111,11 @@
             <div class="flex items-center space-x-3 mb-2">
               <span class="text-3xl">🌿</span>
               <div>
-                <h3 class="font-bold text-brand-ink text-sm sm:text-base">溫柔木木</h3>
-                <span class="text-xs text-brand-accent font-medium">治癒暖心系</span>
+                <h3 class="font-bold text-brand-ink text-sm sm:text-base" data-i18n="mumu_name">溫柔木木</h3>
+                <span class="text-xs text-brand-accent font-medium" data-i18n="mumu_tag">治癒暖心系</span>
               </div>
             </div>
-            <p class="text-xs text-brand-muted leading-relaxed">
+            <p class="text-xs text-brand-muted leading-relaxed" data-i18n="mumu_desc">
               「沒關係的，你已經很努力了。喝杯熱茶，我在這裡溫柔守候你的脆弱。」
             </p>
             <div class="selected-indicator absolute top-3 right-3 text-brand-accent">
@@ -118,11 +128,11 @@
             <div class="flex items-center space-x-3 mb-2">
               <span class="text-3xl">☕</span>
               <div>
-                <h3 class="font-bold text-brand-ink text-sm sm:text-base">毒舌阿柴</h3>
-                <span class="text-xs text-brand-amber font-medium">幽默吐槽系</span>
+                <h3 class="font-bold text-brand-ink text-sm sm:text-base" data-i18n="chai_name">毒舌阿柴</h3>
+                <span class="text-xs text-brand-amber font-medium" data-i18n="chai_tag">幽默吐槽系</span>
               </div>
             </div>
-            <p class="text-xs text-brand-muted leading-relaxed">
+            <p class="text-xs text-brand-muted leading-relaxed" data-i18n="chai_desc">
               「天不會塌下來，塌了也是高個頂著。別再半夜內耗了，快給我醒醒！」
             </p>
             <div class="selected-indicator absolute top-3 right-3 text-brand-accent hidden">
@@ -135,11 +145,11 @@
             <div class="flex items-center space-x-3 mb-2">
               <span class="text-3xl">📜</span>
               <div>
-                <h3 class="font-bold text-brand-ink text-sm sm:text-base">哲學爺爺</h3>
-                <span class="text-xs text-stone-600 font-medium">生活洞察系</span>
+                <h3 class="font-bold text-brand-ink text-sm sm:text-base" data-i18n="grandpa_name">哲學爺爺</h3>
+                <span class="text-xs text-stone-600 font-medium" data-i18n="grandpa_tag">生活洞察系</span>
               </div>
             </div>
-            <p class="text-xs text-brand-muted leading-relaxed">
+            <p class="text-xs text-brand-muted leading-relaxed" data-i18n="grandpa_desc">
               「葉落自逢秋，水流終歸海。眼前的困局，只是人生畫卷的一抹筆觸。」
             </p>
             <div class="selected-indicator absolute top-3 right-3 text-brand-accent hidden">
@@ -154,29 +164,29 @@
       <div class="space-y-3">
         <label class="block text-sm font-bold text-brand-ink flex items-center space-x-1.5">
           <span class="w-5 h-5 rounded-full bg-brand-accent text-white inline-flex items-center justify-center text-xs">2</span>
-          <span>標記你此刻的心情頻率（可複選）</span>
+          <span data-i18n="step2_title">標記你此刻的心情頻率（可複選）</span>
         </label>
         <div class="flex flex-wrap gap-2" id="moodTags">
           <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="焦慮內耗">
-            🌪️ 焦慮內耗
+            <span data-i18n="tag_anxiety">🌪️ 焦慮內耗</span>
           </button>
           <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="期中/學業崩潰">
-            📚 期中期末崩潰
+            <span data-i18n="tag_exam">📚 期中期末崩潰</span>
           </button>
           <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="迷惘不知去向">
-            🧭 迷惘不知方向
+            <span data-i18n="tag_lost">🧭 迷惘不知方向</span>
           </button>
           <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="人際心累">
-            👥 人際心累
+            <span data-i18n="tag_social">👥 人際心累</span>
           </button>
           <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="深夜失眠">
-            🌙 深夜失眠
+            <span data-i18n="tag_insomnia">🌙 深夜失眠</span>
           </button>
           <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="想被罵醒">
-            ⚡ 想被罵醒
+            <span data-i18n="tag_wake">⚡ 想被罵醒</span>
           </button>
           <button type="button" class="mood-tag px-3 py-1.5 rounded-full text-xs font-medium bg-brand-paper border border-brand-border hover:border-brand-accent transition-colors" data-tag="努力卻沒結果">
-            🌧️ 努力卻沒結果
+            <span data-i18n="tag_fruitless">🌧️ 努力卻沒結果</span>
           </button>
         </div>
       </div>
@@ -186,21 +196,21 @@
         <div class="flex items-center justify-between">
           <label class="block text-sm font-bold text-brand-ink flex items-center space-x-1.5">
             <span class="w-5 h-5 rounded-full bg-brand-accent text-white inline-flex items-center justify-center text-xs">3</span>
-            <span>親筆寫下你的心事</span>
+            <span data-i18n="step3_title">親筆寫下你的心事</span>
           </label>
           
           <!-- 快速範例 -->
           <div class="flex items-center space-x-1 text-xs text-brand-muted">
-            <span>靈感範例：</span>
-            <button type="button" id="btnFillDemo1" class="text-brand-accent hover:underline">期中專題好焦慮</button>
+            <span data-i18n="demo_label">靈感範例：</span>
+            <button type="button" id="btnFillDemo1" class="text-brand-accent hover:underline" data-i18n="demo1_btn">期中專題好焦慮</button>
             <span>·</span>
-            <button type="button" id="btnFillDemo2" class="text-brand-accent hover:underline">覺得比不上別人</button>
+            <button type="button" id="btnFillDemo2" class="text-brand-accent hover:underline" data-i18n="demo2_btn">覺得比不上別人</button>
           </div>
         </div>
 
         <!-- 稱謂 -->
         <div class="flex items-center space-x-2 bg-brand-paper p-3 rounded-lg border border-brand-border text-sm">
-          <span class="text-brand-muted whitespace-nowrap">你希望店長怎麼稱呼你？</span>
+          <span class="text-brand-muted whitespace-nowrap" data-i18n="sender_prompt">你希望店長怎麼稱呼你？</span>
           <input type="text" id="senderName" value="夜行的小狐狸" placeholder="例：熬夜的大學生、迷路的旅人" class="bg-transparent border-b border-brand-border focus:border-brand-accent outline-none px-2 py-0.5 text-brand-ink w-full font-medium">
         </div>
 
@@ -213,13 +223,20 @@
         </div>
       </div>
 
-      <!-- 投遞按鈕 -->
-      <div class="pt-2 text-center">
+      <!-- 星空投遞勾選與投遞按鈕 -->
+      <div class="pt-2 text-center space-y-3">
+        <div class="flex items-center justify-center space-x-2 text-xs text-brand-muted">
+          <input type="checkbox" id="chkShareToGalaxy" checked class="rounded accent-brand-accent cursor-pointer w-4 h-4">
+          <label for="chkShareToGalaxy" class="cursor-pointer select-none hover:text-brand-ink transition-colors">
+            ✨ 同步匿名投遞到「漂流星空」（去識別化，讓這份溫暖照亮其他夜行者）
+          </label>
+        </div>
+
         <button id="btnSendLetter" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-brand-accent hover:bg-brand-accent/90 text-white font-bold text-base sm:text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center space-x-2 mx-auto">
           <i data-lucide="send" class="w-5 h-5"></i>
-          <span>封信投遞到解憂信箱</span>
+          <span data-i18n="send_btn">封信投遞到解憂信箱</span>
         </button>
-        <p class="text-xs text-brand-muted mt-2">投遞後，店長將親自閱信並開立今日心靈處方箋</p>
+        <p class="text-xs text-brand-muted">投遞後，店長將親自閱信並開立今日心靈處方箋</p>
       </div>
 
     </section>
@@ -231,8 +248,8 @@
         <div class="relative text-6xl animate-bounce">📬</div>
       </div>
       <div class="space-y-2">
-        <h3 class="text-xl font-bold font-serif-tc text-brand-ink">信件正在穿過夜色送往雜貨店...</h3>
-        <p class="text-sm text-brand-muted" id="sendingQuote">店長正在點燃油燈、戴上眼鏡閱讀你的信箋</p>
+        <h3 class="text-xl font-bold font-serif-tc text-brand-ink" data-i18n="sending_title">信件正在穿過夜色送往雜貨店...</h3>
+        <p class="text-sm text-brand-muted" id="sendingQuote" data-i18n="sending_quote">店長正在點燃油燈、戴上眼鏡閱讀你的信箋</p>
       </div>
       <div class="w-48 h-1.5 bg-brand-border rounded-full mx-auto overflow-hidden">
         <div class="h-full bg-brand-accent rounded-full animate-pulse w-3/4"></div>
@@ -242,16 +259,47 @@
     <!-- 狀態 3：回信與處方小卡展示 -->
     <section id="sectionReply" class="hidden space-y-8 animate-letter-unfold">
       
+      <!-- 情緒危機轉介引導 (Crisis Safeguard) -->
+      <div id="crisisAlertCard" class="hidden p-5 rounded-2xl bg-rose-50/95 border-2 border-rose-300 text-rose-900 space-y-3 shadow-md animate-fade-in">
+        <div class="flex items-start space-x-3">
+          <span class="text-3xl">🌿</span>
+          <div class="space-y-1">
+            <h4 class="font-bold text-sm text-rose-900 flex items-center space-x-1.5">
+              <span>店長的溫柔守護提醒</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-rose-200 text-rose-800 font-normal">陪伴不缺席</span>
+            </h4>
+            <p class="text-xs text-rose-700 leading-relaxed">
+              親愛的朋友，我們感受到了你心底沉甸甸的痛苦與疲憊。解憂雜貨店永遠是你的心靈樹洞，但也請深深記得：在現實世界裡，你絕不需要獨自一人硬撐。隨時都有溫柔、專業的雙手願意陪伴你：
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+          <a href="tel:1925" class="p-2.5 rounded-xl bg-white border border-rose-200 text-center font-bold text-rose-700 hover:bg-rose-100/50 transition-colors flex items-center justify-center space-x-1.5 shadow-sm">
+            <i data-lucide="phone-call" class="w-4 h-4 text-rose-500"></i>
+            <span>衛福部安心專線 1925</span>
+          </a>
+          <a href="tel:1995" class="p-2.5 rounded-xl bg-white border border-rose-200 text-center font-bold text-rose-700 hover:bg-rose-100/50 transition-colors flex items-center justify-center space-x-1.5 shadow-sm">
+            <i data-lucide="phone-call" class="w-4 h-4 text-rose-500"></i>
+            <span>生命線協談 1995</span>
+          </a>
+          <a href="tel:1980" class="p-2.5 rounded-xl bg-white border border-rose-200 text-center font-bold text-rose-700 hover:bg-rose-100/50 transition-colors flex items-center justify-center space-x-1.5 shadow-sm">
+            <i data-lucide="phone-call" class="w-4 h-4 text-rose-500"></i>
+            <span>張老師專線 1980</span>
+          </a>
+        </div>
+        <p class="text-[11px] text-rose-500 text-center">各大專院校學生心理輔導中心也隨時開放。給自己多一次被好好擁抱的機會 ❤️</p>
+      </div>
+
       <!-- 頂部提示 -->
       <div class="flex items-center justify-between border-b border-brand-border pb-3">
         <div class="flex items-center space-x-2">
           <span class="text-xl">💌</span>
-          <h2 class="text-lg font-bold font-serif-tc text-brand-ink">解憂雜貨店 來信回覆</h2>
+          <h2 class="text-lg font-bold font-serif-tc text-brand-ink" data-i18n="reply_title">解憂雜貨店 來信回覆</h2>
         </div>
         <div class="flex items-center space-x-3">
           <button id="btnHeaderAudio" class="px-3 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-brand-accent text-xs font-medium border border-brand-accent/30 transition-all flex items-center space-x-1 shadow-sm">
             <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
-            <span id="headerAudioText">聽店長讀信</span>
+            <span id="headerAudioText" data-i18n="read_aloud">聽店長讀信</span>
           </button>
           <div class="text-xs text-brand-muted" id="replyDate">2026.10.26</div>
         </div>
@@ -260,7 +308,7 @@
       <!-- 手寫回信本體 (信紙) -->
       <div class="bg-brand-paper border border-brand-border rounded-2xl p-6 sm:p-8 shadow-sm space-y-4 relative overflow-hidden">
         <!-- 復古郵戳標籤 -->
-        <div class="vintage-stamp absolute top-4 right-4 sm:top-6 sm:right-6 px-3 py-1 text-xs">
+        <div class="vintage-stamp absolute top-4 right-4 sm:top-6 sm:right-6 px-3 py-1 text-xs" data-i18n="stamp_postmark">
           Worry Grocer · 回信投遞
         </div>
 
@@ -274,7 +322,7 @@
 
         <div class="pt-4 flex justify-between items-end border-t border-brand-border/60 text-xs sm:text-sm text-brand-muted">
           <div>
-            <span>心情診斷：</span>
+            <span data-i18n="diagnosis_label">心情診斷：</span>
             <span id="replyMoodBadge" class="font-medium text-brand-accent">焦慮內耗</span>
           </div>
           <div class="text-right font-serif-tc font-bold text-brand-ink" id="replySignature">
@@ -288,9 +336,9 @@
         <div class="flex items-center justify-between">
           <h3 class="text-sm font-bold text-brand-ink flex items-center space-x-1.5">
             <i data-lucide="camera" class="w-4 h-4 text-brand-accent"></i>
-            <span>你的專屬心靈處方拍立得（可下載保存）</span>
+            <span data-i18n="polaroid_title">你的專屬心靈處方拍立得（可下載保存）</span>
           </h3>
-          <span class="text-xs text-brand-muted">分享到社群或留給自己</span>
+          <span class="text-xs text-brand-muted" data-i18n="polaroid_sub">分享到社群或留給自己</span>
         </div>
 
         <!-- 拍立得本體 (html2canvas 擷取目標) -->
@@ -307,7 +355,7 @@
 
           <!-- 金句特寫 -->
           <div class="py-2 text-center space-y-2">
-            <span class="text-xs uppercase tracking-widest text-brand-accent font-bold">今日解憂金句</span>
+            <span class="text-xs uppercase tracking-widest text-brand-accent font-bold" data-i18n="quote_label">今日解憂金句</span>
             <blockquote id="cardQuote" class="text-lg sm:text-xl font-bold font-serif-tc text-stone-800 leading-snug px-2">
               「累了就先躺平一會兒，世界不會因為你休息一晚就停止運轉。」
             </blockquote>
@@ -317,7 +365,7 @@
           <div class="bg-stone-50 rounded-xl p-4 border border-stone-100 space-y-2 text-xs sm:text-sm">
             <div class="flex items-center space-x-2 font-bold text-stone-700">
               <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i>
-              <span>今日微處方任務：</span>
+              <span data-i18n="action_label">今日微處方任務：</span>
             </div>
             <p id="cardAction" class="text-stone-600 pl-6 leading-relaxed">
               去泡一杯熱飲，站在窗邊深呼吸三次，今天不責怪自己任何事。
@@ -327,11 +375,11 @@
           <!-- 底部簽署與郵戳 -->
           <div class="flex items-center justify-between pt-2 text-xs text-stone-400">
             <div>
-              <span>給：</span>
+              <span data-i18n="to_label">給：</span>
               <span id="cardReceiver" class="font-medium text-stone-700">夜行的小狐狸</span>
             </div>
             <div class="flex items-center space-x-1 text-brand-seal border border-brand-seal/40 px-2 py-0.5 rounded font-serif-tc text-[11px] font-bold">
-              <span>解憂特調</span>
+              <span data-i18n="stamp_blend">解憂特調</span>
             </div>
           </div>
         </div>
@@ -342,23 +390,23 @@
       <div class="flex flex-wrap items-center justify-center gap-3 pt-4">
         <button id="btnReadAloud" class="px-5 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-brand-accent border border-brand-accent/40 font-medium text-sm transition-all flex items-center space-x-2 shadow-sm">
           <i data-lucide="volume-2" class="w-4 h-4"></i>
-          <span id="readAloudBtnText">語音朗讀回信</span>
+          <span id="readAloudBtnText" data-i18n="read_aloud">語音朗讀回信</span>
         </button>
         <button id="btnVoiceSettings" class="px-4 py-2.5 rounded-xl bg-brand-paper hover:bg-white text-brand-muted hover:text-brand-ink border border-brand-border font-medium text-sm transition-all flex items-center space-x-1.5 shadow-sm" title="更換聲音與背景音樂">
           <i data-lucide="sliders-horizontal" class="w-4 h-4 text-brand-accent"></i>
-          <span>聲線與音樂</span>
+          <span data-i18n="voice_settings">聲線與音樂</span>
         </button>
         <button id="btnDownloadCard" class="px-5 py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent/90 text-white font-medium text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-2">
           <i data-lucide="download" class="w-4 h-4"></i>
-          <span>下載拍立得處方箋 (PNG)</span>
+          <span data-i18n="download_card">下載拍立得處方箋 (PNG)</span>
         </button>
         <button id="btnCopyReply" class="px-5 py-2.5 rounded-xl bg-brand-paper hover:bg-white text-brand-ink border border-brand-border font-medium text-sm transition-all flex items-center space-x-2">
           <i data-lucide="copy" class="w-4 h-4"></i>
-          <span id="copyBtnText">複製回信全文</span>
+          <span id="copyBtnText" data-i18n="copy_reply">複製回信全文</span>
         </button>
         <button id="btnWriteAgain" class="px-5 py-2.5 rounded-xl bg-transparent hover:bg-black/5 text-brand-muted hover:text-brand-ink font-medium text-sm transition-all flex items-center space-x-1.5">
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-          <span>再寫一封心事</span>
+          <span data-i18n="write_again">再寫一封心事</span>
         </button>
       </div>
 
@@ -509,6 +557,67 @@
 
       <div class="pt-2 flex justify-end">
         <button id="btnConfirmVoice" class="px-5 py-2 bg-brand-accent text-white rounded-lg text-xs font-bold hover:bg-brand-accent/90 transition-all">套用設定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: 漂流星空共鳴池 (Galaxy Drift Bottle) -->
+  <div id="modalGalaxy" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col p-4 sm:p-8 hidden overflow-hidden text-white">
+    <!-- 星空頂部 -->
+    <div class="flex items-center justify-between border-b border-slate-800 pb-4 max-w-4xl mx-auto w-full z-10">
+      <div class="flex items-center space-x-2">
+        <span class="text-2xl animate-pulse">🌌</span>
+        <div>
+          <h3 class="font-bold text-base sm:text-lg font-serif-tc text-amber-200 flex items-center space-x-2">
+            <span>漂流星空共鳴池</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">Galaxy Drift Bottle</span>
+          </h3>
+          <p class="text-xs text-slate-400">點擊夜空中的閃爍星子，閱讀匿名心事並送上溫暖擁抱</p>
+        </div>
+      </div>
+      <button id="btnCloseGalaxy" class="p-2 rounded-lg bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- 星空展示畫布 -->
+    <div class="flex-1 relative max-w-4xl mx-auto w-full flex items-center justify-center p-4">
+      <div id="bottleStarsContainer" class="w-full h-full relative flex items-center justify-center">
+        <!-- 漂流星子將透過 JavaScript 動態佈局 -->
+      </div>
+    </div>
+
+    <!-- 漂流瓶閱讀卡片 (點擊星星展開) -->
+    <div id="galaxyLetterCard" class="max-w-md w-full mx-auto bg-slate-900/95 border border-amber-500/40 rounded-2xl p-5 shadow-2xl space-y-3 hidden animate-fade-in z-20 mb-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div class="flex items-center space-x-2 text-xs">
+          <span class="text-base">✨</span>
+          <span id="starAuthor" class="font-bold text-amber-200">來自：期中焦慮的同學</span>
+        </div>
+        <span id="starTag" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">期中/學業崩潰</span>
+      </div>
+      <div class="space-y-2 text-xs sm:text-sm text-slate-300">
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+          <span class="text-amber-400/90 font-bold block mb-1">心事寄語：</span>
+          <p id="starWorry" class="text-slate-300 leading-relaxed font-serif-tc">最近常常覺得事情好多、時間好少，不知道自己到底走在對的路上嗎？</p>
+        </div>
+        <div class="bg-amber-950/20 p-3 rounded-xl border border-amber-500/20 text-amber-200">
+          <span class="text-amber-400 font-bold block mb-1">店長處方金句：</span>
+          <blockquote id="starQuote" class="font-serif-tc text-xs sm:text-sm italic text-amber-100">「累了就先躺平一會兒，世界不會因為你休息一晚就停止運轉。」</blockquote>
+        </div>
+      </div>
+      <div class="pt-2 flex items-center justify-between text-xs border-t border-slate-800/80">
+        <div class="flex items-center space-x-2">
+          <button id="btnSendHug" class="px-3.5 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 flex items-center space-x-1.5 transition-all active:scale-95">
+            <span>🫂 送上擁抱</span>
+            <span id="hugCount" class="font-bold font-mono">142</span>
+          </button>
+          <button id="btnSendTea" class="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center space-x-1.5 transition-all active:scale-95">
+            <span>🍵 遞一杯茶</span>
+            <span id="teaCount" class="font-bold font-mono">88</span>
+          </button>
+        </div>
+        <button id="btnCloseLetterCard" class="text-slate-400 hover:text-white px-2 py-1">收合</button>
       </div>
     </div>
   </div>
